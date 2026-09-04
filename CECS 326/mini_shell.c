@@ -75,12 +75,12 @@ int main(void) {
             execvp(argv[0], argv);
  
             /* execvp() only returns if it failed */
-            fprintf(stderr, "osh: %s: %s\n", argv[0], strerror(errno));
+            fprintf(stderr, "[parent] %s: %s\n", argv[0], strerror(errno));
             _exit(errno == ENOENT ? 127 : 126);
         }
  
         /* ---- parent process ---- */
-        printf("osh: started child process %d\n", pid);
+        printf("[parent] started child process %d\n", pid);
  
         int status;
         if (waitpid(pid, &status, 0) < 0) {
