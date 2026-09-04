@@ -1,7 +1,7 @@
 CC      = gcc
 CFLAGS  = -Wall -Wextra -std=c11
-TARGET  = minishell
-SRC     = minishell.c
+TARGET  = mini_shell
+SRC     = mini_shell.c
  
 .PHONY: all clean
  
