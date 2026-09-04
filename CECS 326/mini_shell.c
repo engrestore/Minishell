@@ -36,6 +36,62 @@ int main(void) {
             printf("\n");
             break;
         }
+     
+        /* Strip the trailing newline that fgets() keeps */
+        line[strcspn(line, "\n")] = '\0';
+
+        /* Strip the trailing newline that fgets() keeps */
+        line[strcspn(line, "\n")] = '\0';
+ 
+        /* Tokenize on whitespace into argv[], NULL-terminated for execvp() */
+        int argc = 0;
+        char *token = strtok(line, " \t");
+        while (token != NULL && argc < MAX_ARGS - 1) {
+            argv[argc++] = token;
+            token = strtok(NULL, " \t");
+        }
+        argv[argc] = NULL;
+ 
+        /* Blank line (nothing tokenized) — just redisplay the prompt */
+        if (argc == 0) {
+            continue;
+        }
+ 
+        /* Built-in: exit — terminate without forking */
+        if (strcmp(argv[0], "exit") == 0) {
+            break;
+        }
+ 
+        pid_t pid = fork();
+ 
+        if (pid < 0) {
+            /* fork() failed */
+            perror("osh: fork failed");
+            continue;
+        }
+ 
+        if (pid == 0) {
+            /* ---- child process ---- */
+            execvp(argv[0], argv);
+ 
+            /* execvp() only returns if it failed */
+            fprintf(stderr, "osh: %s: %s\n", argv[0], strerror(errno));
+            _exit(errno == ENOENT ? 127 : 126);
+        }
+ 
+        /* ---- parent process ---- */
+        printf("osh: started child process %d\n", pid);
+ 
+        int status;
+        if (waitpid(pid, &status, 0) < 0) {
+            perror("osh: waitpid failed");
+            continue;
+        }
+ 
+        if (WIFEXITED(status)) {
+            printf("osh: child %d exited with status %d\n", pid, WEXITSTATUS(status));
+        } else if (WIFSIGNALED(status)) {
+            printf("osh: child %d terminated by signal %d\n", pid, WTERMSIG(status));
     }
 
     return 0;
