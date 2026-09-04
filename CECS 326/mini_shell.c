@@ -20,8 +20,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
  
-#define MAX_LINE 1024   /* max characters per input line   */
-#define MAX_ARGS 64     /* max whitespace-separated tokens */
+#define MAX_LINE 1024   // max characters per input line
+#define MAX_ARGS 64     // max whitespace-separated tokens
 
 int main(void) { 
     char line[MAX_LINE];
