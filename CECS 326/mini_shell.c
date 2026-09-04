@@ -92,6 +92,7 @@ int main(void) {
             printf("osh: child %d exited with status %d\n", pid, WEXITSTATUS(status));
         } else if (WIFSIGNALED(status)) {
             printf("osh: child %d terminated by signal %d\n", pid, WTERMSIG(status));
+        }
     }
 
     return 0;
