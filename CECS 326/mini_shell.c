@@ -32,18 +32,15 @@ int main(void) {
         fflush(stdout);
         // fgets keeps the trailing newline, so strip it
         if (fgets(line, sizeof(line), stdin) == NULL) {
-            /* EOF (e.g. Ctrl-D) — exit the shell loop cleanly */
+            // EOF (e.g. Ctrl-D) — exit the shell loop cleanly
             printf("\n");
             break;
         }
      
-        /* Strip the trailing newline that fgets() keeps */
-        line[strcspn(line, "\n")] = '\0';
-
-        /* Strip the trailing newline that fgets() keeps */
+        // Strip the trailing newline that fgets() keeps
         line[strcspn(line, "\n")] = '\0';
  
-        /* Tokenize on whitespace into argv[], NULL-terminated for execvp() */
+        // Tokenize on whitespace into argv[], NULL-terminated for execvp()
         int argc = 0;
         char *token = strtok(line, " \t");
         while (token != NULL && argc < MAX_ARGS - 1) {
@@ -52,12 +49,12 @@ int main(void) {
         }
         argv[argc] = NULL;
  
-        /* Blank line (nothing tokenized) — just redisplay the prompt */
+        // Blank line (nothing tokenized) — just redisplay the prompt
         if (argc == 0) {
             continue;
         }
  
-        /* Built-in: exit — terminate without forking */
+        // Built-in: exit — terminate without forking
         if (strcmp(argv[0], "exit") == 0) {
             break;
         }
@@ -65,21 +62,21 @@ int main(void) {
         pid_t pid = fork();
  
         if (pid < 0) {
-            /* fork() failed */
+            // fork() failed
             perror("[parent] fork failed");
             continue;
         }
  
         if (pid == 0) {
-            /* ---- child process ---- */
+            // child process
             execvp(argv[0], argv);
  
-            /* execvp() only returns if it failed */
+            // execvp() only returns if it failed
             fprintf(stderr, "[parent] %s: %s\n", argv[0], strerror(errno));
             _exit(errno == ENOENT ? 127 : 126);
         }
  
-        /* ---- parent process ---- */
+        // parent process
         printf("[parent] started child process %d\n", pid);
  
         int status;
