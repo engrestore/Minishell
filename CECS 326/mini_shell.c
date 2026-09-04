@@ -66,7 +66,7 @@ int main(void) {
  
         if (pid < 0) {
             /* fork() failed */
-            perror("osh: fork failed");
+            perror("[parent] fork failed");
             continue;
         }
  
@@ -84,14 +84,14 @@ int main(void) {
  
         int status;
         if (waitpid(pid, &status, 0) < 0) {
-            perror("osh: waitpid failed");
+            perror("[parent] waitpid failed");
             continue;
         }
  
         if (WIFEXITED(status)) {
-            printf("osh: child %d exited with status %d\n", pid, WEXITSTATUS(status));
+            printf("[parent] child %d exited with status %d\n", pid, WEXITSTATUS(status));
         } else if (WIFSIGNALED(status)) {
-            printf("osh: child %d terminated by signal %d\n", pid, WTERMSIG(status));
+            printf("[parent] child %d terminated by signal %d\n", pid, WTERMSIG(status));
         }
     }
 
