@@ -12,32 +12,30 @@
  * 1.0.0: Initial code
  */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+ 
+#define MAX_LINE 1024   /* max characters per input line   */
+#define MAX_ARGS 64     /* max whitespace-separated tokens */
 
-#define MAX_LINE_LEN 1024   // max length of a command line we will read
-#define MAX_ARGS     64     // max number of whitespace-separated tokens
+int main(void) { 
+    char line[MAX_LINE];
+    char *argv[MAX_ARGS];
 
-#include <stdio.h>
-#include <string.h>
-
-int main(void) {
-    char input[256];
-
-    printf("shell> ");
-    fflush(stdout);
-
-    while (fgets(input, sizeof(input), stdin) != NULL) {
+    while (1) {
+        printf("osh> ");
+        fflush(stdout);
         // fgets keeps the trailing newline, so strip it
-        input[strcspn(input, "\n")] = '\0';
-
-        if (strcmp(input, "exit") == 0) {
+        if (fgets(line, sizeof(line), stdin) == NULL) {
+            /* EOF (e.g. Ctrl-D) — exit the shell loop cleanly */
+            printf("\n");
             break;
         }
-
-        printf("You typed: %s\n", input);
-        printf("shell> ");
-        fflush(stdout);
     }
 
     return 0;
